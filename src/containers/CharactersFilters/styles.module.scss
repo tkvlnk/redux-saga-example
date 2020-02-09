@@ -1,0 +1,12 @@
+.FiltersWrap {
+  display: flex;
+  align-items: center;
+}
+
+.FilterItem {
+  margin-right: 20px;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}

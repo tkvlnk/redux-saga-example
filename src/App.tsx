@@ -1,25 +1,45 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Button, Icon, Layout } from 'antd';
+import { Route, Switch } from 'react-router';
+import { Link } from 'react-router-dom';
+import CharactersList from './containers/CharactersList';
+import CharactersFilters from './containers/CharactersFilters';
+import CharacterDetails from './containers/CharacterDetails';
+import AppWrapper from './containers/AppWrapper';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppWrapper>
+      <div className="App">
+        <Layout>
+          <Switch>
+            <Route path="/:characterId">
+              <Layout.Header>
+                <Link to="/">
+                  <Button type="primary">
+                    <Icon type="left" />
+                    Back to list
+                  </Button>
+                </Link>
+              </Layout.Header>
+              <Layout.Content>
+                <CharacterDetails />
+              </Layout.Content>
+            </Route>
+
+            <Route path="/">
+              <Layout.Footer>
+                <CharactersFilters />
+              </Layout.Footer>
+              <Layout.Content>
+                <CharactersList />
+              </Layout.Content>
+            </Route>
+          </Switch>
+        </Layout>
+      </div>
+    </AppWrapper>
   );
 };
 

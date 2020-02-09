@@ -1,0 +1,17 @@
+.ListWrap {
+  padding: 20px 10px 10px 20px;
+}
+
+.List {
+  margin-left: -20px;
+  margin-top: -20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.ListItem {
+  flex: 1 0 300px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
