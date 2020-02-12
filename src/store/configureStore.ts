@@ -1,6 +1,6 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import createSagaMiddleware, { Saga } from 'redux-saga';
+import createSagaMiddleware, { Saga, SagaMiddleware } from 'redux-saga';
 import { History } from 'history';
 import characters, { CharactersState } from './characters';
 
@@ -28,9 +28,39 @@ export default function configureStore({
     composeWithDevTools(applyMiddleware(sagaMiddleware))
   );
 
+  Object.assign(store, createSagaInjector(sagaMiddleware.run, rootSaga));
+
+  return store as typeof store & ReturnType<typeof createSagaInjector>;
+}
+
+function createSagaInjector(runSaga: SagaMiddleware['run'], rootSaga?: Saga) {
+  const injectedSagas = new Map();
+  const isInjected = (key: string) => injectedSagas.has(key);
+  const injectSaga = <S extends Saga>(
+    key: string,
+    saga: S,
+    ...args: Parameters<S>
+  ) => {
+    if (isInjected(key)) {
+      return;
+    }
+    const task = runSaga(saga, ...args);
+    injectedSagas.set(key, task);
+  };
+
+  const ejectSaga = (key: string) => {
+    const task = injectedSagas.get(key);
+
+    if (task.isRunning()) {
+      task.cancel();
+    }
+
+    injectedSagas.delete(key);
+  };
+
   if (rootSaga) {
-    sagaMiddleware.run(rootSaga);
+    injectSaga('root', rootSaga);
   }
 
-  return store;
+  return { injectSaga, ejectSaga };
 }

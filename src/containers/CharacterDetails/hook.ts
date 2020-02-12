@@ -6,6 +6,8 @@ import { stringify } from 'qs';
 import { getCharacterById } from '../../store/characters/selectors';
 import { characterActions } from '../../store/characters/actions';
 import { AppState } from '../../store/configureStore';
+import { useInjectSaga } from '../AppWrapper';
+import characterDetailsSaga from '../../store/characters/sagas/characterDetailsSaga';
 
 export default function useCharacterDetails() {
   const { characterId } = useParams<{ characterId: string }>();
@@ -17,38 +19,7 @@ export default function useCharacterDetails() {
     shallowEqual
   );
 
-  const {
-    detailsFetchSuccess,
-    detailsFetchError,
-    detailsLoading
-  } = bindActionCreators(characterActions, useDispatch());
-
-  useEffect(() => {
-    // eslint-disable-next-line no-underscore-dangle
-    if (character?._id === characterId) {
-      return;
-    }
-
-    (async () => {
-      try {
-        const params = stringify({
-          key: process.env.REACT_APP_API_KEY
-        });
-
-        detailsLoading(true);
-
-        const fetchedData = await fetch(
-          `${process.env.REACT_APP_API_BASE}/characters/${characterId}?${params}`
-        ).then(res => res.json());
-
-        detailsFetchSuccess(fetchedData);
-      } catch (err) {
-        detailsFetchError(err?.message ?? err);
-      } finally {
-        detailsLoading(false);
-      }
-    })();
-  }, [character?._id, characterId]);
+  useInjectSaga('characterDetails', characterDetailsSaga, characterId);
 
   return {
     data: character,

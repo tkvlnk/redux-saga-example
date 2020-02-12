@@ -6,8 +6,12 @@ import CharacterCard from '../../ui/CharacterCard';
 import sm from './styles.module.scss';
 import { getCharactersList } from '../../store/characters/selectors';
 import { AppState } from '../../store/configureStore';
+import { useInjectSaga } from '../AppWrapper';
+import charactersListSaga from '../../store/characters/sagas/charactersListSaga';
 
 const CharactersList: React.FC = () => {
+  useInjectSaga('characterListSaga', charactersListSaga);
+
   const data = useSelector(getCharactersList);
 
   const { loading, error } = useSelector(
