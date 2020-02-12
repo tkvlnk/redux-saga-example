@@ -9,7 +9,6 @@ export interface Character {
   name: string;
   role: string;
   house: typeof houses[keyof typeof houses]['name'];
-  school: string;
   __v: number;
   ministryOfMagic: boolean;
   orderOfThePhoenix: boolean;
@@ -17,6 +16,11 @@ export interface Character {
   deathEater: boolean;
   bloodStatus: typeof bloodStatuses[keyof typeof bloodStatuses]['value'];
   species: string;
+  patronus?: string;
+  animagus?: string;
+  boggart?: string;
+  school?: string;
+  wand?: string;
 }
 
 export interface CharacterSearchParameters {

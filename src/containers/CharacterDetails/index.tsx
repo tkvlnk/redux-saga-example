@@ -2,6 +2,7 @@ import React from 'react';
 import { Alert, Empty, Spin } from 'antd';
 import CharacterCard from '../../ui/CharacterCard';
 import useCharacterDetails from './hook';
+import sm from './styles.module.scss';
 
 const CharacterDetails: React.FC = () => {
   const { data, loading, error } = useCharacterDetails();
@@ -26,8 +27,8 @@ const CharacterDetails: React.FC = () => {
   }
 
   return (
-    <div>
-      <CharacterCard character={data} />
+    <div className={sm.CharacterDetails}>
+      <CharacterCard character={data} detailed />
     </div>
   );
 };
