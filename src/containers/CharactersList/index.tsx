@@ -1,12 +1,19 @@
 import React from 'react';
 import { Alert, Empty, Spin } from 'antd';
 import { Link } from 'react-router-dom';
+import { shallowEqual, useSelector } from 'react-redux';
 import CharacterCard from '../../ui/CharacterCard';
-import useCharactersList from './hook';
 import sm from './styles.module.scss';
+import { getCharactersList } from '../../store/characters/selectors';
+import { AppState } from '../../store/configureStore';
 
 const CharactersList: React.FC = () => {
-  const { loading, data, error } = useCharactersList();
+  const data = useSelector(getCharactersList);
+
+  const { loading, error } = useSelector(
+    (state: AppState) => state.characters.listPage,
+    shallowEqual
+  );
 
   if (loading) {
     return <Spin />;
