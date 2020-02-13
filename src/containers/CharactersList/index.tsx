@@ -6,8 +6,12 @@ import CharacterCard from '../../ui/CharacterCard';
 import sm from './styles.module.scss';
 import { getCharactersList } from '../../store/characters/selectors';
 import { AppState } from '../../store/configureStore';
+import { useInjectSaga } from '../AppWrapper';
+import characterListSaga from '../../store/characters/saga/characterListSaga';
 
 const CharactersList: React.FC = () => {
+  useInjectSaga('charactersSearch', characterListSaga);
+
   const data = useSelector(getCharactersList);
 
   const { loading, error } = useSelector(

@@ -9,6 +9,8 @@ import {
 import { stringify, parse } from 'qs';
 import { characterActions, CharacterActionTypes } from '../actions';
 import { getCharacterSearchParams } from '../selectors';
+import httpClient from '../../network/httpClient';
+import { fetchCharactersListSaga } from '../../network/services/charactes';
 
 export default function* characterListSaga() {
   yield takeLatest(CharacterActionTypes.ListParamsChanged, characterSearchSaga);
@@ -38,22 +40,7 @@ function* characterSearchSaga() {
   yield delay(1000);
 
   try {
-    const params = stringify(
-      {
-        key: process.env.REACT_APP_API_KEY,
-        ...searchParams
-      },
-      {
-        arrayFormat: 'repeat'
-      }
-    );
-
-    const res = yield call(
-      fetch,
-      `${process.env.REACT_APP_API_BASE}/characters?${params}`
-    );
-
-    const data = yield call(() => res.json());
+    const data = yield call(fetchCharactersListSaga, searchParams);
 
     yield put(characterActions.listFetchSuccess(data));
   } catch (err) {
