@@ -3,9 +3,11 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware, { Saga, SagaMiddleware } from 'redux-saga';
 import { History } from 'history';
 import characters, { CharactersState } from './characters';
+import api, { ApiState } from './api';
 
 export interface AppState {
   characters: CharactersState;
+  api: ApiState;
 }
 
 export default function configureStore({
@@ -23,6 +25,7 @@ export default function configureStore({
 
   const store = createStore(
     combineReducers({
+      api,
       characters
     }),
     composeWithDevTools(applyMiddleware(sagaMiddleware))

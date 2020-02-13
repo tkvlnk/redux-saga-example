@@ -9,9 +9,12 @@ import {
 } from 'redux-saga/effects';
 import { stringify, parse } from 'qs';
 import { History } from 'history';
+import axios from 'axios';
 import { characterActions, CharacterActionTypes } from '../actions';
-import { Character, CharacterSearchParameters } from '../index';
+import { CharacterSearchParameters } from '../index';
 import { getCharacterSearchParams } from '../selectors';
+import httpClient from '../../api/http-client';
+import { fetchCharactersList } from '../../api/services/characters';
 
 export default function* charactersListSaga() {
   yield takeLatest(CharacterActionTypes.ListParamsChanged, fetchCharactersSaga);
@@ -28,26 +31,16 @@ function* fetchCharactersSaga() {
 
   yield delay(2000);
 
-  const params = stringify(
-    {
-      key: process.env.REACT_APP_API_KEY,
-      ...searchParams
-    },
-    {
-      arrayFormat: 'repeat'
-    }
-  );
-
   try {
-    const fetchedData: Character[] = yield call(() =>
-      fetch(
-        `${process.env.REACT_APP_API_BASE}/characters?${params}`
-      ).then(res => res.json())
-    );
+    const data = yield call(fetchCharactersList, searchParams);
 
-    yield put(characterActions.listFetchSuccess(fetchedData));
-  } catch (e) {
-    yield put(characterActions.listFetchError(e?.message ?? e));
+    yield put(characterActions.listFetchSuccess(data));
+  } catch (err) {
+    yield put(
+      characterActions.listFetchError(
+        err?.response?.data?.error ?? err?.message ?? err
+      )
+    );
   }
 
   yield put(characterActions.listLoading(false));

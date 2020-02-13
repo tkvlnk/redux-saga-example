@@ -7,12 +7,14 @@ import CharactersList from './containers/CharactersList';
 import CharactersFilters from './containers/CharactersFilters';
 import CharacterDetails from './containers/CharacterDetails';
 import AppWrapper from './containers/AppWrapper';
+import NetworkIndicator from './containers/NetworkIndicator';
 
 const App: React.FC = () => {
   return (
     <AppWrapper>
       <div className="App">
         <Layout>
+          <NetworkIndicator />
           <Switch>
             <Route path="/:characterId">
               <Layout.Header>

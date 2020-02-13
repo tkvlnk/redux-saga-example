@@ -1,8 +1,8 @@
-import { stringify } from 'qs';
 import { call, put, select } from 'redux-saga/effects';
 import { Character } from '../index';
 import { characterActions } from '../actions';
 import { getCharacterById } from '../selectors';
+import { fetchCharacterDetails } from '../../api/services/characters';
 
 export default function* characterDetailsSaga(characterId: Character['_id']) {
   if (yield select(getCharacterById(characterId))) {
@@ -12,19 +12,17 @@ export default function* characterDetailsSaga(characterId: Character['_id']) {
   yield put(characterActions.detailsLoading(true));
 
   try {
-    const params = stringify({
-      key: process.env.REACT_APP_API_KEY
-    });
+    const data = yield call(fetchCharacterDetails, characterId);
 
-    const fetchedData = yield call(() =>
-      fetch(
-        `${process.env.REACT_APP_API_BASE}/characters/${characterId}?${params}`
-      ).then(res => res.json())
-    );
+    console.log('>__data:::', data);
 
-    yield put(characterActions.detailsFetchSuccess(fetchedData));
+    yield put(characterActions.detailsFetchSuccess(data));
   } catch (err) {
-    yield put(characterActions.detailsFetchError(err?.message ?? err));
+    yield put(
+      characterActions.detailsFetchError(
+        err?.response?.data?.error ?? err?.message ?? err
+      )
+    );
   }
 
   yield put(characterActions.detailsLoading(false));

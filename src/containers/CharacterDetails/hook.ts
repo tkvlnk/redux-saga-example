@@ -1,10 +1,6 @@
 import { useParams } from 'react-router';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { bindActionCreators } from 'redux';
-import { stringify } from 'qs';
+import { shallowEqual, useSelector } from 'react-redux';
 import { getCharacterById } from '../../store/characters/selectors';
-import { characterActions } from '../../store/characters/actions';
 import { AppState } from '../../store/configureStore';
 import { useInjectSaga } from '../AppWrapper';
 import characterDetailsSaga from '../../store/characters/sagas/characterDetailsSaga';
